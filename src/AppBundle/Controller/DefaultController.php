@@ -4,9 +4,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Post;
+use AppBundle\Form\NewPostType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -104,5 +109,34 @@ class DefaultController extends Controller
         $em->flush();
 
         return new Response('OK');
+    }
+
+    /**
+     * @Route("/new")
+     */
+    public function newPostAction(Request $request)
+    {
+        $post = new Post();
+        $post->setCreatedAt(new \DateTime());
+        $post->setUpdatedAt(new \DateTime());
+
+        $form = $this->createForm(NewPostType::class, $post);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $post = $form->getData();
+
+            $em = $this->get('doctrine')->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            $this->redirectToRoute('homepage');
+        }
+
+        return $this->render('default/new.html.twig', [
+            'postForm' => $form->createView(),
+        ]);
     }
 }

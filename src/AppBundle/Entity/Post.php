@@ -218,5 +218,10 @@ class Post
     {
         $this->category = $category;
     }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
 }
 

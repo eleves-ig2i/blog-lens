@@ -30,9 +30,14 @@ class Category
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity="Post", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category", cascade={"remove"})
      */
     private $posts;
+
+    public function __toString()
+    {
+        return $this->title;
+    }
 
     public function __construct()
     {

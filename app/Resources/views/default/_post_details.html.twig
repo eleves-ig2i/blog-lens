@@ -1,3 +1,5 @@
 <h2><a href="{{ path('show_post', {'post': post.id}) }}">{{ post.title }}</a></h2>
 
-{{ post.category.title }}
+{% if post.category is not null %}
+<a href="{{ path('show_category', { 'category': post.category.id }) }}">{{ post.category.title }}</a>
+{% endif %}

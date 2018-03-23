@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    <h1>Catégorie "{{ category.title }}"</h1>
+    <h1>Catégorie #{{ category.id }}</h1>
 
     {% include 'default/_post_list.html.twig' with { 'posts': category.posts } %}
 
