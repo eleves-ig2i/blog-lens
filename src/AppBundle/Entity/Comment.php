@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="comment")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -54,6 +55,11 @@ class Comment
      * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
      */
     private $post;
+
+    public function __construct(Post $post)
+    {
+        $this->post = $post;
+    }
 
     /**
      * Get id
@@ -159,6 +165,20 @@ class Comment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdatedAt(new \DateTime('now'));
+
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime('now'));
+        }
     }
 }
 

@@ -6,5 +6,16 @@
 
     <p>{{ post.content }}</p>
 
+    <h3>{{ 'post.comment_this'|trans }}</h3>
+
+    {{ form(form) }}
+
+    <h3>{{ 'post.list'|trans }}</h3>
+
+    {% for comment in post.comments %}
+        {{ comment.content }}
+        Posté par {{ comment.email }} le {{ comment.createdAt|date('d-m-Y') }}
+    {% endfor %}
+
 {% endblock %}
 

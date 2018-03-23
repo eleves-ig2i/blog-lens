@@ -238,5 +238,10 @@ class Post
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
 }
 

@@ -3,7 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Comment;
 use AppBundle\Entity\Post;
+use AppBundle\Form\CommentType;
 use AppBundle\Form\NewPostType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -74,41 +76,29 @@ class DefaultController extends Controller
 
     /**
      * @Route("/post/show/{post}", requirements = { "post": "\d+" }, name = "show_post")
-     * @Method("GET")
      */
-    public function showPostAction(Post $post)
+    public function showPostAction(Request $request, Post $post)
     {
- //       dump($post); // select * from post where id = {post}
+        $comment = new Comment($post);
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $comment = $form->getData();
+
+            $em = $this->get('doctrine')->getManager();
+            $em->persist($comment);
+            $em->flush();
+        }
+
         return $this->render('default/post.html.twig', [
             'post' => $post,
+            'form' => $form->createView(),
         ]);
 
-    }
-
-    /**
-     * @Route("/create/post")
-     */
-    public function createPostAction()
-    {
-        $category = new Category();
-        $category->setTitle('Catégorie 1');
-
-        $post = new Post();
-        $post->setTitle('Mon premier post');
-        $post->setContent('blabla');
-        $post->setStatus(1);
-        $post->setCreatedAt(new \DateTime());
-        $post->setUpdatedAt(new \DateTime());
-
-        // Relation
-        $post->setCategory($category);
-
-        $em = $this->get('doctrine')->getManager();
-        $em->persist($category);
-        $em->persist($post);
-        $em->flush();
-
-        return new Response('OK');
     }
 
     /**

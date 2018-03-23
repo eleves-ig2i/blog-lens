@@ -1,2 +1,5 @@
 category:
     title: Catégorie
+post:
+    comment_this: 'Commentez ce billet'
+    list: 'Liste des commentaires'
