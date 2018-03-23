@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% for post in posts %}
+
+        {% include 'default/_post_details.html.twig' %}
+
+    {% endfor %}
+
+{% endblock %}
